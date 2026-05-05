@@ -1,13 +1,13 @@
-﻿import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-const MASTRA_URL = process.env.MASTRA_URL || 'http://localhost:4111';
-const AGENT_ID = 'tajAssistantAgent';
+const MASTRA_URL = process.env.MASTRA_URL;
+const AGENT_ID = process.env.AGENT_ID;
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    const response = await fetch(`${MASTRA_URL}/chat/${AGENT_ID}`, {
+    const response = await fetch(`${MASTRA_URL}/api/agents/${AGENT_ID}/stream`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error('Chat API error:', error);
     return NextResponse.json(
-      { error: 'Failed to connect to Mastra server. Is it running on port 4111?' },
+      { error: 'Failed to connect to Mastra server at ' + MASTRA_URL },
       { status: 502 }
     );
   }
