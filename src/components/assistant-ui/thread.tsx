@@ -6,7 +6,71 @@ import {
   MessagePrimitive,
   ThreadPrimitive,
 } from '@assistant-ui/react';
-import type { FC } from 'react';
+import { type FC, useState, useRef, useEffect } from 'react';
+
+const HeaderMenu: FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const startNewChat = () => {
+    window.localStorage.removeItem('taj-chat-thread-id');
+    window.location.reload();
+  };
+
+  return (
+    <div className="ml-auto relative" ref={menuRef}>
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className="p-1.5 rounded-md hover:bg-black/5 transition-colors text-gray-600"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="1" />
+          <circle cx="19" cy="12" r="1" />
+          <circle cx="5" cy="12" r="1" />
+        </svg>
+      </button>
+      
+      {isOpen && (
+        <div className="absolute right-0 mt-1 w-52 bg-white rounded-xl shadow-lg border border-gray-100 z-50 py-1.5">
+          <button 
+            onClick={startNewChat}
+            className="w-full text-left px-4 py-2.5 text-[0.875rem] text-gray-700 hover:bg-gray-50 flex items-center gap-2.5 transition-colors"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+            </svg>
+            Start a new chat
+          </button>
+          <button className="w-full text-left px-4 py-2.5 text-[0.875rem] text-gray-400 cursor-not-allowed flex items-center gap-2.5">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+            End chat
+          </button>
+          <button className="w-full text-left px-4 py-2.5 text-[0.875rem] text-gray-400 cursor-not-allowed flex items-center gap-2.5">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+            View recent chats
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export const Thread: FC = () => {
   return (
@@ -36,35 +100,32 @@ export const Thread: FC = () => {
             Tax Administration Jamaica
           </p>
         </div>
-        <div
-          className="ml-auto flex items-center gap-1 text-[0.6875rem] font-medium px-2 py-0.5 rounded-full"
-          style={{ background: '#ecfdf5', color: '#059669' }}
-        >
-          <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-          Online
-        </div>
+        <HeaderMenu />
       </header>
 
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto px-4 py-5 taj-scrollbar">
         <ThreadPrimitive.Empty>
-          <div className="flex flex-col items-center justify-center h-full text-center px-4">
-            <div className="flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-amber-600 to-amber-700 shadow-md mb-5">
-              <span className="text-xl font-bold text-white">TAJ</span>
+          <div className="flex flex-col h-full px-4 pt-10 pb-4">
+            <div className="flex flex-col items-center justify-center text-center mb-auto">
+              <div className="flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-amber-600 to-amber-700 shadow-md mb-5">
+                <span className="text-xl font-bold text-white">TAJ</span>
+              </div>
+              <h2
+                className="text-lg font-semibold mb-1.5"
+                style={{ color: 'var(--taj-text)' }}
+              >
+                How can I help you?
+              </h2>
+              <p
+                className="text-sm max-w-xs mb-6"
+                style={{ color: 'var(--taj-text-secondary)' }}
+              >
+                Ask me about TAJ services, TRN, driver&apos;s licences, and more.
+              </p>
             </div>
-            <h2
-              className="text-lg font-semibold mb-1.5"
-              style={{ color: 'var(--taj-text)' }}
-            >
-              How can I help you?
-            </h2>
-            <p
-              className="text-sm max-w-xs mb-6"
-              style={{ color: 'var(--taj-text-secondary)' }}
-            >
-              Ask me about TAJ services, TRN, driver&apos;s licences, and more.
-            </p>
-            <div className="flex flex-col gap-2 w-full max-w-xs">
+            
+            <div className="flex flex-col items-end gap-2.5 w-full mt-auto">
               <SuggestionButton text="How do I get a TRN?" />
               <SuggestionButton text="What are the driver's licence fees?" />
               <SuggestionButton text="How do I pay traffic tickets?" />
@@ -80,20 +141,7 @@ export const Thread: FC = () => {
         />
       </div>
 
-      {/* Scroll to bottom */}
-      <ThreadPrimitive.ScrollToBottom
-        className="absolute bottom-28 left-1/2 z-10 -translate-x-1/2 cursor-pointer rounded-full px-3 py-1.5 text-xs font-medium shadow-md transition-all hover:shadow-lg"
-        style={{
-          background: 'var(--taj-surface)',
-          color: 'var(--taj-text-secondary)',
-          border: '1px solid var(--taj-border)',
-        }}
-      >
-        <svg className="inline-block w-3.5 h-3.5 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          <polyline points="6 9 12 15 18 9" />
-        </svg>
-        New messages
-      </ThreadPrimitive.ScrollToBottom>
+
 
       {/* Composer */}
       <div
@@ -197,29 +245,15 @@ const AssistantMessage: FC = () => {
 
 const SuggestionButton: FC<{ text: string }> = ({ text }) => {
   return (
-    <button
-      className="text-left text-sm rounded-xl px-4 py-2.5 transition-all cursor-pointer hover:shadow-sm"
+    <ThreadPrimitive.Suggestion
+      className="text-left text-[0.9375rem] rounded-2xl rounded-br-sm px-4 py-2.5 transition-all cursor-pointer shadow-sm hover:shadow-md hover:bg-gray-50 border border-gray-200 bg-white hover:-translate-y-[1px]"
       style={{
         color: 'var(--taj-text)',
-        background: 'var(--taj-surface)',
-        border: '1px solid var(--taj-border)',
       }}
-      onClick={() => {
-        const input = document.querySelector<HTMLTextAreaElement>('[data-composer-input]');
-        if (input) {
-          const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-            window.HTMLTextAreaElement.prototype, 'value'
-          )?.set;
-          nativeInputValueSetter?.call(input, text);
-          input.dispatchEvent(new Event('input', { bubbles: true }));
-          setTimeout(() => {
-            const form = input.closest('form');
-            form?.requestSubmit();
-          }, 100);
-        }
-      }}
+      prompt={text}
+      send={true}
     >
       {text}
-    </button>
+    </ThreadPrimitive.Suggestion>
   );
 };
