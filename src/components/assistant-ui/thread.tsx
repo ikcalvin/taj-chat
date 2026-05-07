@@ -5,6 +5,7 @@ import {
   ComposerPrimitive,
   MessagePrimitive,
   ThreadPrimitive,
+  useMessage,
 } from '@assistant-ui/react';
 import { type FC, useState, useRef, useEffect } from 'react';
 
@@ -83,7 +84,7 @@ export const Thread: FC = () => {
           borderColor: 'var(--taj-border)',
         }}
       >
-        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-amber-600 to-amber-700 shadow-sm">
+        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-[#0E3F6F] to-[#0D829B] shadow-sm">
           <span className="text-sm font-semibold text-white">T</span>
         </div>
         <div>
@@ -108,7 +109,7 @@ export const Thread: FC = () => {
         <ThreadPrimitive.Empty>
           <div className="flex flex-col h-full px-4 pt-10 pb-4">
             <div className="flex flex-col items-center justify-center text-center mb-auto">
-              <div className="flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-amber-600 to-amber-700 shadow-md mb-5">
+              <div className="flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-[#0E3F6F] to-[#0D829B] shadow-md mb-5">
                 <span className="text-xl font-bold text-white">TAJ</span>
               </div>
               <h2
@@ -205,15 +206,29 @@ const UserMessage: FC = () => {
 };
 
 const AssistantMessage: FC = () => {
+  const message = useMessage();
+  const isGenerating = message?.status?.type === 'running';
+  const hasTextContent = message?.content?.some(
+    (part: any) => part.type === 'text' && part.text.length > 0
+  );
+  const showTypingIndicator = isGenerating && !hasTextContent;
+
   return (
     <div className="flex justify-start mb-4 group">
       <div className="flex gap-2.5 max-w-[88%]">
-        <div className="flex-shrink-0 w-7 h-7 rounded-full bg-gradient-to-br from-amber-600 to-amber-700 flex items-center justify-center mt-0.5">
+        <div className="flex-shrink-0 w-7 h-7 rounded-full bg-gradient-to-br from-[#0E3F6F] to-[#0D829B] flex items-center justify-center mt-0.5 shadow-sm">
           <span className="text-[0.625rem] font-bold text-white">T</span>
         </div>
         <div className="flex-1 min-w-0">
           <div className="aui-assistant-message-content assistant-prose">
             <MessagePrimitive.Content />
+            {showTypingIndicator && (
+              <div className="flex gap-1 items-center h-6 px-1">
+                <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+              </div>
+            )}
           </div>
           <ActionBarPrimitive.Root className="mt-1 flex gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
             <ActionBarPrimitive.Copy

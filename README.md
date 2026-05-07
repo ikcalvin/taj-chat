@@ -60,10 +60,9 @@ Open [http://localhost:3000](http://localhost:3000) to use the chat.
 
 ## Environment Variables
 
-| Variable | Description |
-|---|---|
+| Variable                 | Description                                                                               |
+| ------------------------ | ----------------------------------------------------------------------------------------- |
 | `NEXT_PUBLIC_MASTRA_URL` | Full URL to the Mastra chat endpoint, e.g. `http://localhost:4111/chat/orchestratorAgent` |
-| `AGENT_ID` | The agent key to use (must match the JS object key in the backend's `agents` map) |
 
 > **Note:** The agent ID in the URL is the **JavaScript object key** from the backend's `agents` map (e.g. `orchestratorAgent`), not the agent's `id` field (`orchestrator`). See the [backend README](https://github.com/ikcalvin/taj-assistant#running-locally) for the full mapping.
 
@@ -78,13 +77,17 @@ Open [http://localhost:3000](http://localhost:3000) to use the chat.
 Append `?embed=true` to the URL to use the widget mode, suitable for embedding in an iframe:
 
 ```html
-<iframe src="http://localhost:3000?embed=true" width="400" height="600"></iframe>
+<iframe
+  src="http://localhost:3000?embed=true"
+  width="400"
+  height="600"
+></iframe>
 ```
 
 The parent page can control the widget via `postMessage`:
 
 ```js
-iframe.contentWindow.postMessage({ type: 'taj-chat-toggle' }, '*');
-iframe.contentWindow.postMessage({ type: 'taj-chat-open' }, '*');
-iframe.contentWindow.postMessage({ type: 'taj-chat-close' }, '*');
+iframe.contentWindow.postMessage({ type: "taj-chat-toggle" }, "*");
+iframe.contentWindow.postMessage({ type: "taj-chat-open" }, "*");
+iframe.contentWindow.postMessage({ type: "taj-chat-close" }, "*");
 ```

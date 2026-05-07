@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 
 :root {
-  --aui-primary: #d97706;
+  --aui-primary: #0D829B;
   --taj-bg: #faf9f7;
   --taj-surface: #ffffff;
   --taj-user-bubble: #f0ece4;
@@ -9,12 +9,12 @@
   --taj-text: #1a1a1a;
   --taj-text-secondary: #6b6b6b;
   --taj-border: #e8e5e0;
-  --taj-accent: #d97706;
+  --taj-accent: #0D829B;
   --taj-header-bg: #ffffff;
   --taj-composer-bg: #ffffff;
   --taj-composer-border: #e0ddd7;
-  --taj-send-bg: #1a1a1a;
-  --taj-send-hover: #333333;
+  --taj-send-bg: #0E3F6F;
+  --taj-send-hover: #0D829B;
 }
 
 /* Streaming text animation */
@@ -57,6 +57,11 @@
   margin-left: 2px;
   vertical-align: text-bottom;
   animation: blink 0.8s step-end infinite;
+}
+
+/* Hide default assistant-ui ● indicator */
+.aui-assistant-message-content span[style*="font-family: revert"] {
+  display: none !important;
 }
 
 /* Custom scrollbar */
