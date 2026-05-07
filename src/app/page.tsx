@@ -6,6 +6,18 @@ import { Thread } from '@/components/assistant-ui/thread';
 import { useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
 
+const THREAD_ID_STORAGE_KEY = 'taj-chat-thread-id';
+const RESOURCE_ID_STORAGE_KEY = 'taj-chat-resource-id';
+
+function getOrCreateClientId(storageKey: string, prefix: string): string {
+  const existingValue = window.localStorage.getItem(storageKey);
+  if (existingValue) return existingValue;
+
+  const generatedValue = `${prefix}-${crypto.randomUUID()}`;
+  window.localStorage.setItem(storageKey, generatedValue);
+  return generatedValue;
+}
+
 function ChatApp() {
   const searchParams = useSearchParams();
   const isEmbed = searchParams.get('embed') === 'true';
@@ -14,7 +26,23 @@ function ChatApp() {
 
   const runtime = useChatRuntime({
     transport: new AssistantChatTransport({
-      api: '/api/chat',
+      api: process.env.NEXT_PUBLIC_MASTRA_URL!,
+      prepareSendMessagesRequest: async (options) => {
+        const threadId = getOrCreateClientId(THREAD_ID_STORAGE_KEY, 'thread');
+        const resourceId = getOrCreateClientId(RESOURCE_ID_STORAGE_KEY, 'resource');
+
+        return {
+          ...options,
+          body: {
+            ...options.body,
+            messages: options.messages,
+            trigger: options.trigger,
+            messageId: options.messageId,
+            threadId,
+            resourceId,
+          },
+        };
+      },
     }),
   });
 
