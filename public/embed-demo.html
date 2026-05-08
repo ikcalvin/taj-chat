@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TAJ Chat Widget - Embed Demo</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      color: #333;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+    p {
+      color: #666;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+    .demo-content {
+      background: white;
+      border-radius: 12px;
+      padding: 32px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      margin-bottom: 24px;
+    }
+    h2 {
+      font-size: 1.25rem;
+      margin-bottom: 12px;
+    }
+    pre {
+      background: #1a1a1a;
+      color: #e5e5e5;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 0.875rem;
+      line-height: 1.6;
+    }
+    code {
+      font-family: 'SF Mono', Monaco, Consolas, monospace;
+    }
+    .highlight {
+      color: #fbbf24;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>TAJ Assistant Chat Widget</h1>
+    <p>This page demonstrates the embeddable chat widget. Click the chat button in the bottom-right corner to try it out.</p>
+
+    <div class="demo-content">
+      <h2>Quick Start</h2>
+      <p>Add this single line to your website, just before the closing <code>&lt;/body&gt;</code> tag:</p>
+      <pre><code>&lt;script src="<span class="highlight">https://YOUR_DOMAIN</span>/embed.js" data-taj-chat&gt;&lt;/script&gt;</code></pre>
+    </div>
+
+    <div class="demo-content">
+      <h2>Configuration Options</h2>
+      <pre><code>&lt;script
+  src="https://YOUR_DOMAIN/embed.js"
+  data-taj-chat
+  data-taj-url="https://YOUR_DOMAIN"
+  data-taj-position="right"
+  data-taj-color="#b45309"
+  data-taj-size="default"
+&gt;&lt;/script&gt;</code></pre>
+      <p style="margin-top: 12px;">
+        <strong>data-taj-position:</strong> "right" or "left"<br />
+        <strong>data-taj-color:</strong> Hex color for the launcher button<br />
+        <strong>data-taj-size:</strong> "compact", "default", or "large"
+      </p>
+    </div>
+
+    <div class="demo-content">
+      <h2>JavaScript API</h2>
+      <pre><code>// Open the chat
+TajChat.open();
+
+// Close the chat
+TajChat.close();
+
+// Toggle the chat
+TajChat.toggle();</code></pre>
+    </div>
+  </div>
+
+  <!-- Embed the TAJ Chat widget -->
+  <script src="/embed.js" data-taj-chat data-taj-url=""></script>
+</body>
+</html>

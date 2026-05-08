@@ -1,34 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TAJ Chat
+
+Chat frontend for the [TAJ Assistant](https://github.com/ikcalvin/taj-assistant) — a Mastra-powered AI assistant for Tax Administration Jamaica services.
+
+Built with [Next.js](https://nextjs.org) and [assistant-ui](https://www.assistant-ui.com/) using the [separate server integration](https://www.assistant-ui.com/docs/integrations/frameworks/mastra/separate-server) pattern.
+
+## How It Works
+
+The frontend connects to a separate Mastra backend server over HTTP. The assistant-ui `AssistantChatTransport` sends messages to the Mastra `chatRoute` endpoint, which streams responses back using the AI SDK v6 format.
+
+```
+Browser (localhost:3000)  -->  Mastra server (localhost:4111)
+     assistant-ui              /chat/orchestratorAgent
+     AssistantChatTransport         |
+                                    v
+                             Orchestrator agent
+                                    |
+                              Tax / TRN / Motor Vehicle agents
+```
+
+The frontend includes:
+
+- Full-page and embeddable widget modes (toggle with `?embed=true`).
+- Per-user thread and resource IDs stored in `localStorage` for conversation continuity.
+- Custom TAJ-branded UI with suggested questions.
+
+## Prerequisites
+
+- Node.js >= 18
+- The [TAJ Assistant](https://github.com/ikcalvin/taj-assistant) backend running on `localhost:4111`
 
 ## Getting Started
 
-First, run the development server:
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Copy and configure the environment:
+
+```bash
+cp .env.example .env
+```
+
+3. Start the Mastra backend (in a separate terminal):
+
+```bash
+cd ../taj-assistant
+npm run dev
+```
+
+4. Start the frontend:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to use the chat.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment Variables
 
-## Learn More
+| Variable                 | Description                                                                               |
+| ------------------------ | ----------------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_MASTRA_URL` | Full URL to the Mastra chat endpoint, e.g. `http://localhost:4111/chat/orchestratorAgent` |
 
-To learn more about Next.js, take a look at the following resources:
+> **Note:** The agent ID in the URL is the **JavaScript object key** from the backend's `agents` map (e.g. `orchestratorAgent`), not the agent's `id` field (`orchestrator`). See the [backend README](https://github.com/ikcalvin/taj-assistant#running-locally) for the full mapping.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Key Files
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `src/app/page.tsx`: Main chat page with full-page and embed modes, transport configuration.
+- `src/components/assistant-ui/thread.tsx`: Customised assistant-ui thread component with TAJ branding.
+- `src/app/globals.css`: TAJ design tokens and animations.
 
-## Deploy on Vercel
+## Embed Mode
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Append `?embed=true` to the URL to use the widget mode, suitable for embedding in an iframe:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```html
+<iframe
+  src="http://localhost:3000?embed=true"
+  width="400"
+  height="600"
+></iframe>
+```
+
+The parent page can control the widget via `postMessage`:
+
+```js
+iframe.contentWindow.postMessage({ type: "taj-chat-toggle" }, "*");
+iframe.contentWindow.postMessage({ type: "taj-chat-open" }, "*");
+iframe.contentWindow.postMessage({ type: "taj-chat-close" }, "*");
+```
