@@ -62,6 +62,13 @@ function ChatApp() {
       if (event.data?.type === 'taj-chat-close') {
         setIsOpen(false);
       }
+      if (event.data?.type === 'taj-theme-change') {
+        if (event.data.theme === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+          document.documentElement.removeAttribute('data-theme');
+        }
+      }
     };
 
     window.addEventListener('message', handleMessage);
@@ -81,11 +88,11 @@ function ChatApp() {
   if (isEmbed) {
     return (
       <AssistantRuntimeProvider runtime={runtime}>
-        <div className="h-dvh w-full flex flex-col">
+        <div className="h-dvh w-full flex flex-col p-4 pb-6">
           {/* Widget Panel */}
           {hasBeenOpened && (
             <div
-              className={`flex-1 flex flex-col overflow-hidden rounded-2xl shadow-2xl ${
+              className={`flex-1 flex flex-col overflow-hidden rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] ${
                 isOpen ? 'widget-enter' : 'widget-exit'
               }`}
               style={{

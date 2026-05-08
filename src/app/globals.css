@@ -17,6 +17,23 @@
   --taj-send-hover: #0D829B;
 }
 
+[data-theme="dark"] {
+  --aui-primary: #00e599;
+  --taj-bg: rgba(10, 10, 10, 0.8);
+  --taj-surface: #050505;
+  --taj-user-bubble: rgba(0, 229, 153, 0.15);
+  --taj-assistant-bg: transparent;
+  --taj-text: #ffffff;
+  --taj-text-secondary: #a1a1aa;
+  --taj-border: rgba(255, 255, 255, 0.1);
+  --taj-accent: #00e599;
+  --taj-header-bg: #0a0a0a;
+  --taj-composer-bg: #0a0a0a;
+  --taj-composer-border: rgba(255, 255, 255, 0.15);
+  --taj-send-bg: #00e599;
+  --taj-send-hover: #00cc88;
+}
+
 /* Streaming text animation */
 @keyframes fadeInWord {
   from {
