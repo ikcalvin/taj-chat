@@ -26,7 +26,9 @@ function ChatApp() {
 
   const runtime = useChatRuntime({
     transport: new AssistantChatTransport({
-      api: process.env.NEXT_PUBLIC_MASTRA_URL!,
+      // Route through the Next.js server-side proxy so the API key
+      // stays on the server and is never exposed to the browser.
+      api: '/api/chat',
       prepareSendMessagesRequest: async (options) => {
         const threadId = getOrCreateClientId(THREAD_ID_STORAGE_KEY, 'thread');
         const resourceId = getOrCreateClientId(RESOURCE_ID_STORAGE_KEY, 'resource');
